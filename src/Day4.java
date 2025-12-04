@@ -24,18 +24,17 @@ public class Day4 {
         return grid;
     }
 
-    private static boolean isInBound(int row, int col, char[][] grid) {
-        return row >= 0 && row < grid.length && col >= 0 && col < grid[0].length;
+    private static boolean isInBound(Pair p, char[][] grid) {
+        return p.row >= 0 && p.row < grid.length && p.col >= 0 && p.col < grid[0].length;
     }
 
-    private static int countRollsAround(int row, int col, char[][] grid) {
+    private static int countRollsAround(Pair p, char[][] grid) {
         int count = 0;
         for (int drow = -1; drow <= 1; ++drow) {
             for (int dcol = -1; dcol <= 1; ++dcol) {
                 if (drow == 0 && dcol == 0) continue;
-                int newRow = row + drow;
-                int newCol = col + dcol;
-                if (isInBound(newRow, newCol, grid) && grid[newRow][newCol] == PAPER_ROLL) {
+                Pair neighbor = new Pair(p.row + drow, p.col + dcol);
+                if (isInBound(neighbor, grid) && grid[neighbor.row][neighbor.col] == PAPER_ROLL) {
                     ++count;
                 }
             }
@@ -50,9 +49,10 @@ public class Day4 {
 
         for (int row = 0; row < grid.length; ++row) {
             for (int col = 0; col < grid[0].length; ++col) {
-                if (grid[row][col] == '@' && countRollsAround(row, col, grid) < 4) {
+                Pair p = new Pair(row, col);
+                if (grid[row][col] == PAPER_ROLL && countRollsAround(p, grid) < 4) {
                     ++count;
-                    toRemove.add(new Pair(row, col));
+                    toRemove.add(p);
                 }
             }
         }
@@ -79,7 +79,6 @@ public class Day4 {
 
         return totalRemoved;
     }
-
 
     public void solve(List<String> input) {
         System.out.println("Day 4");
