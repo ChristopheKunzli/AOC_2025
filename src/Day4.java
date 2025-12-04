@@ -82,7 +82,7 @@ public class Day4 {
 
 
     public void solve(List<String> input) {
-        System.out.println("Day 3");
+        System.out.println("Day 4");
         System.out.println("Part 1: " + part1(parse(input)));
         System.out.println("Part 2: " + part2(parse(input)));
     }
