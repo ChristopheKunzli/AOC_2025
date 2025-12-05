@@ -49,7 +49,7 @@ public class Day5 {
         }
     }
 
-    private Set<Range> mergeRanges(Set<Range> ranges) {
+    private static Set<Range> mergeRanges(Set<Range> ranges) {
         Set<Range> mergedRanges = new HashSet<>();
 
         while (!ranges.isEmpty()) {
