@@ -26,6 +26,9 @@ public class Day5 {
         }
 
         static Range merge(Range r1, Range r2) {
+            if (!r1.overlaps(r2)) {
+                throw new IllegalArgumentException("Ranges do not overlap and cannot be merged.");
+            }
             return new Range(Math.min(r1.start, r2.start), Math.max(r1.end, r2.end));
         }
     }
