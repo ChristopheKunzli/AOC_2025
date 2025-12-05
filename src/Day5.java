@@ -25,8 +25,8 @@ public class Day5 {
             return this.start <= other.end && other.start <= this.end;
         }
 
-        Range merge(Range other) {
-            return new Range(Math.min(this.start, other.start), Math.max(this.end, other.end));
+        static Range merge(Range r1, Range r2) {
+            return new Range(Math.min(r1.start, r2.start), Math.max(r1.end, r2.end));
         }
     }
 
@@ -37,18 +37,12 @@ public class Day5 {
         int index = 0;
 
         while (!input.get(index).isEmpty()) {
-            String[] parts = input.get(index).split("-");
-            long start = Long.parseLong(parts[0]);
-            long end = Long.parseLong(parts[1]);
-            ranges.add(new Range(start, end));
-            ++index;
+            String[] parts = input.get(index++).split("-");
+            ranges.add(new Range(Long.parseLong(parts[0]), Long.parseLong(parts[1])));
         }
 
-        ++index;
-
-        while (index < input.size()) {
+        while (++index < input.size()) {
             availableIds.add(Long.parseLong(input.get(index)));
-            ++index;
         }
     }
 
@@ -62,16 +56,11 @@ public class Day5 {
 
     private int part1() {
         int count = 0;
-
         for (long id : availableIds) {
-            for (Range range : ranges) {
-                if (range.isInRange(id)) {
-                    ++count;
-                    break;
-                }
+            if (ranges.stream().anyMatch(range -> range.isInRange(id))) {
+                count++;
             }
         }
-
         return count;
     }
 
@@ -88,7 +77,7 @@ public class Day5 {
                 Set<Range> toRemove = new HashSet<>();
                 for (Range range : ranges) {
                     if (current.overlaps(range)) {
-                        current = current.merge(range);
+                        current = Range.merge(current, range);
                         toRemove.add(range);
                         merged = true;
                     }
