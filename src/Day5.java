@@ -33,8 +33,8 @@ public class Day5 {
         }
     }
 
-    Set<Range> ranges = new HashSet<>();
-    Set<Long> availableIds = new HashSet<>();
+    private Set<Range> ranges = new HashSet<>();
+    private final Set<Long> availableIds = new HashSet<>();
 
     private void parse(List<String> input) {
         int index = 0;
@@ -49,8 +49,35 @@ public class Day5 {
         }
     }
 
+    private Set<Range> mergeRanges(Set<Range> ranges) {
+        Set<Range> mergedRanges = new HashSet<>();
+
+        while (!ranges.isEmpty()) {
+            Range current = ranges.iterator().next();
+            ranges.remove(current);
+
+            boolean mergeHappened;
+            do {
+                mergeHappened = false;
+                Set<Range> toRemove = new HashSet<>();
+                for (Range range : ranges) {
+                    if (current.overlaps(range)) {
+                        current = Range.merge(current, range);
+                        toRemove.add(range);
+                        mergeHappened = true;
+                    }
+                }
+                ranges.removeAll(toRemove);
+            } while (mergeHappened);
+
+            mergedRanges.add(current);
+        }
+        return mergedRanges;
+    }
+
     public void solve(java.util.List<String> input) {
         parse(input);
+        ranges = mergeRanges(ranges);
 
         System.out.println("Day 5");
         System.out.println("Part 1: " + part1());
@@ -59,37 +86,23 @@ public class Day5 {
 
     private int part1() {
         int count = 0;
+
         for (long id : availableIds) {
             if (ranges.stream().anyMatch(range -> range.isInRange(id))) {
                 count++;
             }
         }
+
         return count;
     }
 
     private long part2() {
         long count = 0;
 
-        while (!ranges.isEmpty()) {
-            Range current = ranges.iterator().next();
-            ranges.remove(current);
-
-            boolean merged;
-            do {
-                merged = false;
-                Set<Range> toRemove = new HashSet<>();
-                for (Range range : ranges) {
-                    if (current.overlaps(range)) {
-                        current = Range.merge(current, range);
-                        toRemove.add(range);
-                        merged = true;
-                    }
-                }
-                ranges.removeAll(toRemove);
-            } while (merged);
-
-            count += current.lengthInclusive();
+        for (Range range : ranges) {
+            count += range.lengthInclusive();
         }
+
         return count;
     }
 }
