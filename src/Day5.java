@@ -13,8 +13,8 @@ public class Day5 {
             this.end = end;
         }
 
-        boolean isInRange(long value) {
-            return value >= start && value <= end;
+        boolean isIdInRange(long id) {
+            return id >= start && id <= end;
         }
 
         long lengthInclusive() {
@@ -57,6 +57,7 @@ public class Day5 {
             ranges.remove(current);
 
             boolean mergeHappened;
+
             do {
                 mergeHappened = false;
                 Set<Range> toRemove = new HashSet<>();
@@ -68,10 +69,12 @@ public class Day5 {
                     }
                 }
                 ranges.removeAll(toRemove);
+
             } while (mergeHappened);
 
             mergedRanges.add(current);
         }
+
         return mergedRanges;
     }
 
@@ -88,7 +91,7 @@ public class Day5 {
         int count = 0;
 
         for (long id : availableIds) {
-            if (ranges.stream().anyMatch(range -> range.isInRange(id))) {
+            if (ranges.stream().anyMatch(range -> range.isIdInRange(id))) {
                 count++;
             }
         }

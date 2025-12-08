@@ -32,7 +32,6 @@ public class Day7 {
 
     private int startRow, startCol;
     private char[][] grid;
-    private char[][] copyGrid;
 
     private static final char EMPTY = '.';
     private static final char SPLITTER = '^';
@@ -42,7 +41,7 @@ public class Day7 {
     public void solve(List<String> input) {
         parse(input);
 
-        System.out.println("Day 6");
+        System.out.println("Day 7");
         System.out.println("Part 1: " + part1());
         System.out.println("Part 2: " + part2());
     }
@@ -69,14 +68,11 @@ public class Day7 {
 
                 while (nextRow < grid.length && grid[nextRow][nextCol] == EMPTY) {
                     visited[nextRow][nextCol] = true;
-                    copyGrid[nextRow][nextCol] = BEAM;
                     nextRow++;
                 }
 
                 if (nextRow < grid.length && !visited[nextRow][nextCol] && grid[nextRow][nextCol] == SPLITTER) {
                     visited[nextRow][nextCol] = true;
-                    copyGrid[nextRow][nextCol + 1] = BEAM;
-                    copyGrid[nextRow][nextCol - 1] = BEAM;
                     ++count;
                     nextBeams.add(new Coordinate(nextRow, nextCol - 1));
                     nextBeams.add(new Coordinate(nextRow, nextCol + 1));
@@ -130,13 +126,11 @@ public class Day7 {
 
     private void parse(List<String> input) {
         grid = new char[input.size()][input.get(0).length()];
-        copyGrid = new char[grid.length][grid[0].length];
 
         for (int i = 0; i < input.size(); ++i) {
             String line = input.get(i);
             for (int j = 0; j < line.length(); ++j) {
                 grid[i][j] = line.charAt(j);
-                copyGrid[i][j] = line.charAt(j);
                 if (grid[i][j] == START) {
                     startRow = i;
                     startCol = j;
