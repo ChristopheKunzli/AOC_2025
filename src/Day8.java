@@ -12,19 +12,6 @@ public class Day8 {
         }
 
         @Override
-        public int hashCode() {
-            return Objects.hash(x, y, z);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
-            Box o = (Box) obj;
-            return x == o.x && y == o.y && z == o.z;
-        }
-
-        @Override
         public String toString() {
             return "Box(" + x + "," + y + "," + z + ")";
         }
@@ -32,15 +19,15 @@ public class Day8 {
 
     private static class Connection {
         Box a, b;
-        long distSq;
+        long distSquare;
 
         Connection(Box a, Box b) {
             this.a = a;
             this.b = b;
-            this.distSq = distanceSq(a, b);
+            this.distSquare = distanceSquare(a, b);
         }
 
-        private static long distanceSq(Box a, Box b) {
+        private static long distanceSquare(Box a, Box b) {
             long dx = (long) a.x - b.x;
             long dy = (long) a.y - b.y;
             long dz = (long) a.z - b.z;
@@ -49,22 +36,7 @@ public class Day8 {
 
         @Override
         public String toString() {
-            return a + " <-> " + b + " : " + distSq;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
-            Connection other = (Connection) obj;
-            return (a.equals(other.a) && b.equals(other.b)) || (a.equals(other.b) && b.equals(other.a));
-        }
-
-        @Override
-        public int hashCode() {
-            int h1 = a.hashCode();
-            int h2 = b.hashCode();
-            return h1 ^ h2;
+            return a + " <-> " + b + " : " + distSquare;
         }
     }
 
@@ -94,7 +66,7 @@ public class Day8 {
     public void solve(List<String> input) {
         Box[] boxes = parse(input);
         Connection[] allConnections = computeAllConnections(boxes);
-        Arrays.sort(allConnections, Comparator.comparingLong(c -> c.distSq));
+        Arrays.sort(allConnections, Comparator.comparingLong(c -> c.distSquare));
 
         System.out.println("Day 8");
         System.out.println("Part 1: " + part1(allConnections, boxes));
