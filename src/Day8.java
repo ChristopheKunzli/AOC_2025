@@ -71,11 +71,7 @@ public class Day8 {
     private static Box[] parse(List<String> input) {
         List<Box> boxes = new ArrayList<>();
         for (String line : input) {
-            if (line == null) continue;
-            line = line.trim();
-            if (line.isEmpty()) continue;
             String[] parts = line.split(",");
-            if (parts.length != 3) throw new IllegalArgumentException("Bad input line: " + line);
             boxes.add(new Box(Integer.parseInt(parts[0].trim()),
                 Integer.parseInt(parts[1].trim()),
                 Integer.parseInt(parts[2].trim())));
@@ -137,17 +133,14 @@ public class Day8 {
     private long part2(Connection[] allConnections, Box[] boxes) {
         List<Set<Box>> clusters = initializeClusters(boxes);
 
-        long result = 0;
-
         for (Connection connection : allConnections) {
             attemptConnection(connection, clusters);
             if (clusters.size() == 1) {
-                result = ((long) connection.a.x) * connection.b.x;
-                break;
+                return ((long) connection.a.x) * connection.b.x;
             }
         }
 
-        return result;
+        return -1; // should not reach here
     }
 
     private static List<Set<Box>> initializeClusters(Box[] boxes) {
