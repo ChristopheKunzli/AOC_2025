@@ -60,12 +60,10 @@ public class Day8 {
             return (a.equals(other.a) && b.equals(other.b)) || (a.equals(other.b) && b.equals(other.a));
         }
 
-        // symmetric hashCode to match unordered equals
         @Override
         public int hashCode() {
             int h1 = a.hashCode();
             int h2 = b.hashCode();
-            // XOR is symmetric (a^b == b^a). Alternatively use Objects.hash(min,max).
             return h1 ^ h2;
         }
     }
@@ -149,14 +147,10 @@ public class Day8 {
             }
         }
 
-        for (Set<Box> cluster : clusters) {
-            System.out.println(cluster);
-        }
-
         return result;
     }
 
-    private List<Set<Box>> initializeClusters(Box[] boxes) {
+    private static List<Set<Box>> initializeClusters(Box[] boxes) {
         List<Set<Box>> clusters = new ArrayList<>();
         for (Box box : boxes) {
             Set<Box> s = new HashSet<>();
