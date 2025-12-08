@@ -13,7 +13,7 @@ public class Day8 {
 
         @Override
         public int hashCode() {
-            return x * 31 * 31 + y * 31 + z;
+            return Objects.hash(x, y, z);
         }
 
         @Override
@@ -30,6 +30,35 @@ public class Day8 {
         }
     }
 
+    private static class Connection {
+        Box a, b;
+        double distance;
+
+        Connection(Box a, Box b, double distance) {
+            this.a = a;
+            this.b = b;
+            this.distance = distance;
+        }
+
+        @Override
+        public String toString() {
+            return a + " <-> " + b + " : " + distance;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(a, b);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            Connection other = (Connection) obj;
+            return (a.equals(other.a) && b.equals(other.b)) || (a.equals(other.b) && b.equals(other.a));
+        }
+    }
+
     private static Box[] parse(List<String> input) {
         Box[] boxes = new Box[input.size()];
 
@@ -41,99 +70,78 @@ public class Day8 {
         return boxes;
     }
 
-    public void solve(java.util.List<String> input) {
+    private Connection[] computeAllConnections(Box[] boxes) {
+        List<Connection> connections = new ArrayList<>();
+
+        for (int i = 0; i < boxes.length; ++i) {
+            for (int j = i + 1; j < boxes.length; ++j) {
+                double dist = distance(boxes[i], boxes[j]);
+                connections.add(new Connection(boxes[i], boxes[j], dist));
+            }
+        }
+
+        return connections.toArray(new Connection[0]);
+    }
+
+    public void solve(List<String> input) {
         Box[] boxes = parse(input);
+        Connection[] allConnections = computeAllConnections(boxes);
+        Arrays.sort(allConnections, Comparator.comparingDouble(c -> c.distance));
 
         System.out.println("Day 8");
-        System.out.println("Part 1: " + part1(boxes));
+        System.out.println("Part 1: " + part1(allConnections, boxes, 1000));
         System.out.println("Part 2: " + part2());
     }
 
     private static double distance(Box a, Box b) {
-        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2) + Math.pow(a.z - b.z, 2));
+        return Math.ceil(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2) + Math.pow(a.z - b.z, 2)) * 1000.0) / 1000.0;
     }
 
-    private static Box[] findClosesTwoUnconnectedBoxes(Box[] boxes, List<Set<Box>> circuits) {
-        Box[] closest = new Box[2];
-        double minDistance = Double.MAX_VALUE;
+    private boolean attemptConnection(Connection connection, List<Set<Box>> clusters) {
+        Box a = connection.a;
+        Box b = connection.b;
 
-        for (int i = 0; i < boxes.length; ++i) {
-            for (int j = i + 1; j < boxes.length; ++j) {
+        Set<Box> setA = null, setB = null;
+        for (Set<Box> cluster : clusters) {
+            if (cluster.contains(a)) setA = cluster;
+            if (cluster.contains(b)) setB = cluster;
+        }
+        
+        if (setA != null && setB != null && setA != setB) {
+            setA.addAll(setB);
+            clusters.remove(setB);
+            return true;
+        }
 
-                boolean connected = false;
-                for (Set<Box> circuit : circuits) {
-                    if (circuit.contains(boxes[i]) && circuit.contains(boxes[j])) {
-                        connected = true;
-                        break;
-                    }
-                }
-                if (connected) {
-                    continue;
-                }
+        return false;
+    }
 
-                double dist = distance(boxes[i], boxes[j]);
-                if (dist < minDistance) {
-                    minDistance = dist;
-                    closest[0] = boxes[i];
-                    closest[1] = boxes[j];
-                }
+    private int part1(Connection[] allConnections, Box[] boxes, int n) {
+        int connectionsMade = 0, index = 0;
+        List<Set<Box>> clusters = new ArrayList<>();
+        for (Box box : boxes) {
+            Set<Box> cluster = new HashSet<>();
+            cluster.add(box);
+            clusters.add(cluster);
+        }
+
+        while (index < allConnections.length && connectionsMade < n) {
+            if (attemptConnection(allConnections[index++], clusters)) {
+                ++connectionsMade;
             }
         }
 
-        return closest;
-    }
+        clusters.sort((a, b) -> Integer.compare(b.size(), a.size()));
 
-    private List<Set<Box>> connectClosesBoxes(int n, Box[] boxes) {
-        List<Set<Box>> circuits = new ArrayList<>();
-
-        for (int i = 0; i < n; ++i) {
-            Box[] closest = findClosesTwoUnconnectedBoxes(boxes, circuits);
-
-            //System.out.println(closest[0] + " <-> " + closest[1] + " : " + distance(closest[0], closest[1]));
-            System.out.println(i + 1 + ": " + closest[0] + " <-> " + closest[1]);
-            
-            Set<Box> c1 = null;
-            Set<Box> c2 = null;
-            for (Set<Box> circuit : circuits) {
-                if (circuit.contains(closest[0])) {
-                    c1 = circuit;
-                } else if (circuit.contains(closest[1])) {
-                    c2 = circuit;
-                }
-            }
-
-            if (c1 == null && c2 == null) {
-                Set<Box> newCircuit = new HashSet<>();
-                newCircuit.add(closest[0]);
-                newCircuit.add(closest[1]);
-                circuits.add(newCircuit);
-            } else if (c1 != null && c2 == null) {
-                c1.add(closest[1]);
-            } else if (c1 == null && c2 != null) {
-                c2.add(closest[0]);
-            } else if (c1 != c2) {
-                c1.addAll(c2);
-                circuits.remove(c2);
-            }
+        for (Set<Box> cluster : clusters) {
+            System.out.println(cluster);
         }
 
-        return circuits;
-    }
-
-    private long part1(Box[] boxes) {
-        List<Set<Box>> circuits = connectClosesBoxes(10, boxes);
-
-        long result = 1;
-        circuits.sort((a, b) -> b.size() - a.size());
-        if (circuits.size() < 3) {
-            throw new RuntimeException("Less than 3 circuits found");
-        }
-        for (int i = 0; i < 3; ++i) {
-            System.out.println(circuits.get(i));
-            result *= circuits.get(i).size();
+        if (clusters.size() < 3) {
+            throw new IllegalArgumentException("There must be at least 3 circuits");
         }
 
-        return result;
+        return clusters.get(0).size() * clusters.get(1).size() * clusters.get(2).size();
     }
 
     private int part2() {
