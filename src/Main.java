@@ -16,8 +16,8 @@ public class Main {
         new Day5().solve(Utils.getStrings(filesPaths.get(i++)));
         new Day6().solve(Utils.getStrings(filesPaths.get(i++)));
         new Day7().solve(Utils.getStrings(filesPaths.get(i++)));
-        /*
         new Day8().solve(Utils.getStrings(filesPaths.get(i++)));
+        /*
         new Day9().solve(Utils.getStrings(filesPaths.get(i++)));
         new Day10().solve(Utils.getStrings(filesPaths.get(i++)));
         new Day11().solve(Utils.getStrings(filesPaths.get(i++)));
