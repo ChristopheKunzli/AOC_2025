@@ -11,7 +11,7 @@ public class Day1 {
     }
 
     private final List<Instruction> instructions = new ArrayList<>();
-    private static final int N = 100;//amount of numbers from 0 to n - 1
+    private static final int N = 100;
 
     public void solve(List<String> input) {
         parse(input);
@@ -64,5 +64,3 @@ public class Day1 {
         return sum;
     }
 }
-//6548 too high
-//6498

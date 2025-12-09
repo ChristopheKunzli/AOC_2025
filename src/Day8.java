@@ -124,5 +124,4 @@ public class Day8 {
         }
         return clusters;
     }
-
 }

@@ -138,6 +138,4 @@ public class Day7 {
             }
         }
     }
-
-
 }

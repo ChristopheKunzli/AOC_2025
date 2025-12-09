@@ -31,8 +31,6 @@ public class Day2 {
     public void solve(List<String> input) {
         ranges = parseRanges(Arrays.stream(input.getFirst().split(",")).toList());
 
-        //System.out.println(ranges);
-
         System.out.println("Day 2");
         System.out.println("Part 1: " + part1());
         System.out.println("Part 2: " + part2());
@@ -84,7 +82,6 @@ public class Day2 {
         for (Range range : ranges) {
             for (long current = range.start; current <= range.end; current++) {
                 if (isInvalidIdPart2(current)) {
-                    //System.out.println(range + " adding " + current);
                     sum += current;
                 }
             }

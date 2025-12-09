@@ -24,34 +24,6 @@ public class Day3 {
         return max;
     }
 
-/*
-    private long findJBestJoltagePart2(String battery) {
-        String copy = new String(battery);
-
-        int toRemove = battery.length() - 12;
-        int countRemoved = 0;
-
-        for (int i = 1; i <= 9; ++i) {
-            String iStr = String.valueOf(i);
-            boolean flag = false;
-
-            while (copy.contains(iStr)) {
-                int index = copy.indexOf(iStr);
-                copy = copy.substring(0, index) + copy.substring(index + 1);
-                ++countRemoved;
-                if (countRemoved == toRemove) {
-                    flag = true;
-                    break;
-                }
-            }
-
-            if (flag) break;
-        }
-
-        return Long.parseLong(copy);
-    }
-*/
-
     private long findJBestJoltagePart2(String battery) {
         int n = battery.length();
 
@@ -90,11 +62,8 @@ public class Day3 {
     private long part2() {
         long sum = 0;
         for (String battery : batteries) {
-            //System.out.println(findJBestJoltagePart2(battery));
             sum += findJBestJoltagePart2(battery);
         }
         return sum;
     }
 }
-
-//94970671426405 too low

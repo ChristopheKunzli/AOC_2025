@@ -6,7 +6,6 @@ public class Day6 {
     private final List<List<Integer>> numbers = new ArrayList<>();
     private final List<Character> operators = new ArrayList<>();
 
-
     private void parse(List<String> input) {
         for (int i = 0; i < input.size() - 1; ++i) {
             String[] parts = input.get(i).split(" ");
