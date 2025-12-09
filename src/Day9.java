@@ -27,22 +27,21 @@ public class Day9 {
         return coordinates;
     }
 
-
     public void solve(List<String> input) {
-        List<Coordinate> coordinates = parse(input);
+        List<Coordinate> redTiles = parse(input);
 
         System.out.println("Day 9");
-        System.out.println("Part 1: " + part1(coordinates));
-        System.out.println("Part 2: " + part2());
+        System.out.println("Part 1: " + part1(redTiles));
+        System.out.println("Part 2: " + part2(redTiles));
     }
 
-    private long part1(List<Coordinate> coordinates) {
+    private long part1(List<Coordinate> redTiles) {
         long maxArea = 0;
 
-        for (int i = 0; i < coordinates.size(); ++i) {
-            Coordinate corner1 = coordinates.get(i);
-            for (int j = i + 1; j < coordinates.size(); ++j) {
-                Coordinate corner2 = coordinates.get(j);
+        for (int i = 0; i < redTiles.size(); ++i) {
+            Coordinate corner1 = redTiles.get(i);
+            for (int j = i + 1; j < redTiles.size(); ++j) {
+                Coordinate corner2 = redTiles.get(j);
                 maxArea = Math.max(Coordinate.rectangleArea(corner1, corner2), maxArea);
             }
         }
@@ -50,7 +49,7 @@ public class Day9 {
         return maxArea;
     }
 
-    private int part2() {
+    private int part2(List<Coordinate> redTiles) {
         return 0;
     }
 }
