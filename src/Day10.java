@@ -1,16 +1,11 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Day10 {
 
     private record Machine(char[] indicatorLightDiagram,
                            List<List<Integer>> buttonWiringSchematics,
-                           int[] joltageRequirements) {
-
-        @Override
-        public String toString() {
-            return "Machine{" + "indicatorLightDiagram=[" + String.valueOf(indicatorLightDiagram) + "]" + ", buttonWiringSchematics=" + buttonWiringSchematics + ", joltageRequirements=" + java.util.Arrays.toString(joltageRequirements) + '}';
-        }
-    }
+                           int[] joltageRequirements) {}
 
     private List<Machine> parse(List<String> input) {
         List<Machine> machines = new ArrayList<>();
@@ -102,7 +97,7 @@ public class Day10 {
         return sum;
     }
 
-    private int part2() {
+    private int part2(List<Machine> machines) {
         return 0;
     }
 }
