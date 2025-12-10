@@ -51,21 +51,22 @@ public class Day8 {
         return boxes.toArray(new Box[0]);
     }
 
-    private Connection[] computeAllConnections(Box[] boxes) {
-        List<Connection> connections = new ArrayList<>();
+    private Connection[] computeAllPotentialConnections(Box[] boxes) {
+        Connection[] connections = new Connection[boxes.length * (boxes.length - 1) / 2];
+        int index = 0;
 
         for (int i = 0; i < boxes.length; ++i) {
             for (int j = i + 1; j < boxes.length; ++j) {
-                connections.add(new Connection(boxes[i], boxes[j]));
+                connections[index++] = new Connection(boxes[i], boxes[j]);
             }
         }
 
-        return connections.toArray(new Connection[0]);
+        return connections;
     }
 
     public void solve(List<String> input) {
         Box[] boxes = parse(input);
-        Connection[] allConnections = computeAllConnections(boxes);
+        Connection[] allConnections = computeAllPotentialConnections(boxes);
         Arrays.sort(allConnections, Comparator.comparingLong(c -> c.distSquare));
 
         System.out.println("Day 8");
