@@ -5,21 +5,6 @@ public class Day10 {
     private record Machine(char[] indicatorLightDiagram,
                            List<List<Integer>> buttonWiringSchematics,
                            int[] joltageRequirements) {
-        private Machine(char[] indicatorLightDiagram, List<List<Integer>> buttonWiringSchematics, int[] joltageRequirements) {
-            this.indicatorLightDiagram = indicatorLightDiagram;
-            this.buttonWiringSchematics = buttonWiringSchematics;
-            this.joltageRequirements = joltageRequirements;
-
-            //lights = new boolean[indicatorLightDiagram.length];
-        }
-
-        public boolean[] lightsFromIndicator() {
-            boolean[] lights = new boolean[indicatorLightDiagram.length];
-            for (int i = 0; i < indicatorLightDiagram.length; ++i) {
-                lights[i] = indicatorLightDiagram[i] == ON;
-            }
-            return lights;
-        }
 
         @Override
         public String toString() {
@@ -72,7 +57,7 @@ public class Day10 {
 
         System.out.println("Day 10");
         System.out.println("Part 1: " + part1(machines));
-        System.out.println("Part 2: " + part2());
+        System.out.println("Part 2: " + part2(machines));
     }
 
     private static final char ON = '#';
@@ -87,51 +72,18 @@ public class Day10 {
         return true;
     }
 
-    private int findShortestPath(Machine machine) {
-        Queue<boolean[]> queue = new LinkedList<>();
-
-        boolean[] lights = new boolean[machine.indicatorLightDiagram.length];
-        queue.add(lights);
-
-        int count = 0;
-        while (!queue.isEmpty()) {
-            Queue<boolean[]> next = new LinkedList<>();
-
-            while (!queue.isEmpty()) {
-                boolean[] currentLights = queue.poll();
-
-                if (isOn(machine.indicatorLightDiagram, currentLights)) {
-                    return count;
-                }
-
-                for (List<Integer> buttonWiring : machine.buttonWiringSchematics) {
-                    boolean[] newLights = Arrays.copyOf(currentLights, currentLights.length);
-                    for (int index : buttonWiring) {
-                        newLights[index] = !newLights[index];
-                    }
-                    next.add(newLights);
-                }
-            }
-
-            queue = next;
-            ++count;
-        }
-
-        return -1;
-    }
-
-    private int explore(Machine machine, boolean[] lights, int index, int count) {
+    private int findShortestWayToTurnMachineOn(Machine machine, boolean[] lights, int index, int count) {
         if (index >= machine.buttonWiringSchematics.size()) {
             return isOn(machine.indicatorLightDiagram, lights) ? count : Integer.MAX_VALUE;
         }
 
-        int minPresses = explore(machine, lights, index + 1, count);
+        int minPresses = findShortestWayToTurnMachineOn(machine, lights, index + 1, count);
 
         for (int lightIndex : machine.buttonWiringSchematics.get(index)) {
             lights[lightIndex] = !lights[lightIndex];
         }
 
-        minPresses = Math.min(minPresses, explore(machine, lights, index + 1, count + 1));
+        minPresses = Math.min(minPresses, findShortestWayToTurnMachineOn(machine, lights, index + 1, count + 1));
 
         for (int lightIndex : machine.buttonWiringSchematics.get(index)) {
             lights[lightIndex] = !lights[lightIndex];
@@ -144,7 +96,7 @@ public class Day10 {
         int sum = 0;
 
         for (Machine machine : machines) {
-            sum += explore(machine, new boolean[machine.indicatorLightDiagram.length], 0, 0);
+            sum += findShortestWayToTurnMachineOn(machine, new boolean[machine.indicatorLightDiagram.length], 0, 0);
         }
 
         return sum;
