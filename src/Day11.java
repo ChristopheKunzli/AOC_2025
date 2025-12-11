@@ -23,25 +23,36 @@ public class Day11 {
         System.out.println("Part 2: " + part2(graph));
     }
 
-    private int dfs(String node, Map<String, Set<String>> graph) {
-        if (node.equals("out")) {
-            return 1;
+    private long dfs(String node, String target, Map<String, Set<String>> graph, Map<String, Long> memo) {
+        if (node.equals(target)) {
+            return 1L;
+        }
+        if (memo.containsKey(node)) {
+            return memo.get(node);
         }
 
-        int count = 0;
+        long count = 0L;
 
         for (String neighbor : graph.getOrDefault(node, Collections.emptySet())) {
-            count += dfs(neighbor, graph);
+            count += dfs(neighbor, target, graph, memo);
         }
 
+        memo.put(node, count);
         return count;
     }
 
-    private int part1(Map<String, Set<String>> graph) {
-        return dfs("you", graph);
+    private long part1(Map<String, Set<String>> graph) {
+        return dfs("you", "out", graph, new HashMap<>());
     }
 
-    private int part2(Map<String, Set<String>> graph) {
-        return 0;
+    private long part2(Map<String, Set<String>> graph) {
+        long dac_out = dfs("dac", "out", graph, new HashMap<>());
+        long fft_dac = dfs("fft", "dac", graph, new HashMap<>());
+        long svr_fft = dfs("svr", "fft", graph, new HashMap<>());
+        long fft_out = dfs("fft", "out", graph, new HashMap<>());
+        long dac_fft = dfs("dac", "fft", graph, new HashMap<>());
+        long svr_dac = dfs("svr", "dac", graph, new HashMap<>());
+
+        return (svr_dac * dac_fft * fft_out) + (svr_fft * fft_dac * dac_out);
     }
 }
