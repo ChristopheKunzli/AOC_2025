@@ -98,6 +98,22 @@ public class Day10 {
     }
 
     private int part2(List<Machine> machines) {
-        return 0;
+        String script = "src/day10_I_cheated.py";
+        
+        try {
+            ProcessBuilder pb = new ProcessBuilder("python3", script);
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            java.io.InputStream is = process.getInputStream();
+            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+            String output = s.hasNext() ? s.next() : "";
+            s.close();
+            process.waitFor();
+            return Integer.parseInt(output.trim());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return -1;
     }
 }
