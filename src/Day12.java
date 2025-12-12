@@ -96,7 +96,7 @@ public class Day12 {
         return count;
     }
 
-    private int part2() {
-        return 0;
+    private String part2() {
+        return "part 2 is a lie !";
     }
 }
